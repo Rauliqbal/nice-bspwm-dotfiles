@@ -10,18 +10,18 @@
 #  About   :  This file will configure and launch the rice.
 #
 
+# Terminate existing processes if necessary.
+. "${HOME}"/.config/bspwm/src/Process.bash
+
 # Current Rice
 read -r RICE < "$HOME"/.config/bspwm/.rice
 
-# Terminate or reload existing processes if necessary.
-. "${HOME}"/.config/bspwm/src/Process.bash
-
 # Vars config for Karla Rice
 # Bspwm border		# Normal border color	# Focused border color
-BORDER_WIDTH="3"	NORMAL_BC="#353c52"		FOCUSED_BC="#353c52"
+BORDER_WIDTH="3"	NORMAL_BC="#353c52"		FOCUSED_BC="#5884d4"
 
 # Fade true|false	# Shadows true|false	# Corner radius		# Shadow color			# Animations true|fals
-P_FADE="false"		P_SHADOWS="false"		P_CORNER_R="0"		SHADOW_C="#000000"		ANIMATIONS="true"
+P_FADE="false"		P_SHADOWS="false"		P_CORNER_R="12"		SHADOW_C="#000000"		ANIMATIONS="true"
 
 # (Zombie-Night) colorscheme
 bg="#0E1113"  fg="#afb1db"
@@ -29,8 +29,8 @@ bg="#0E1113"  fg="#afb1db"
 black="#353c52"   red="#e7034a"   green="#61b33e"   yellow="#ffb964"
 blackb="#353c52"  redb="#e71c5b"  greenb="#6fb352"  yellowb="#ffb964"
 
-blue="#5884d4"   magenta="#7a44e3"   cyan="#7df0f0"   white="#afb1db"
-blueb="#5f90ea"  magentab="#8656e3"  cyanb="#97f0f0"  whiteb="#afb1db"
+blue="#5884d4"   magenta="#7a44e3"   cyan="#7df0f0"   white="#faf7ff"
+blueb="#5f90ea"  magentab="#8656e3"  cyanb="#97f0f0"  whiteb="#fdfcff"
 
 # Gtk theme vars
 gtk_theme="z0mbi3Night-zk"	gtk_icons="Sweet-Rainbow"	gtk_cursor="Qogirr-Dark"	geany_theme="z0mbi3-z0mbi3Night"
@@ -161,14 +161,20 @@ set_picom_config() {
 		-e "s/corner-radius = .*/corner-radius = ${P_CORNER_R}/"
 
 	sed -i "$picom_rules_file" \
-		-e "95s/	opacity = .*/	opacity = 0.95;/"
+		-e "101s/	opacity = .*/	opacity = 0.95;/"
 
 	if [[ "$ANIMATIONS" = "true" ]]; then
 		sed -i "$picom_rules_file" \
 			-e '/picom-animations/c\@include "picom-animations.conf"'
+
+		sed -i "$picom_conf_file" \
+			-e "s/no-fading-openclose = .*/no-fading-openclose = true/"
 	else
 		sed -i "$picom_rules_file" \
 			-e '/picom-animations/c\#@include "picom-animations.conf"'
+
+		sed -i "$picom_conf_file" \
+			-e "s/no-fading-openclose = .*/no-fading-openclose = false/"
 	fi
 }
 
@@ -246,15 +252,6 @@ set_launchers() {
     img-background: url("~/.config/bspwm/rices/${RICE}/rofi.webp", width);
 }
 EOF
-
-	# Screenlock colors
-	sed -i "$HOME"/.config/bspwm/src/ScreenLocker \
-		-e "s/bg=.*/bg=${bg:1}/" \
-		-e "s/fg=.*/fg=${fg:1}/" \
-		-e "s/ring=.*/ring=${bg:1}/" \
-		-e "s/wrong=.*/wrong=${red:1}/" \
-		-e "s/date=.*/date=${fg:1}/" \
-		-e "s/verify=.*/verify=${green:1}/"
 }
 
 set_appearance() {
@@ -291,6 +288,9 @@ set_geany(){
 
 # Launch theme
 launch_theme() {
+
+	# Set random wallpaper for actual rice
+	feh -z --no-fehbg --bg-fill "${HOME}"/.config/bspwm/rices/"${RICE}"/walls
 
 	# Launch dunst notification daemon
 	dunst -config "${HOME}"/.config/bspwm/src/config/dunstrc &

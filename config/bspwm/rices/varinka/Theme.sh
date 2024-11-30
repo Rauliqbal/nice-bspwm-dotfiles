@@ -10,11 +10,11 @@
 #  About   :  This file will configure and launch the rice.
 #
 
+# Terminate existing processes if necessary.
+. "${HOME}"/.config/bspwm/src/Process.bash
+
 # Current Rice
 read -r RICE < "$HOME"/.config/bspwm/.rice
-
-# Terminate or reload existing processes if necessary.
-. "${HOME}"/.config/bspwm/src/Process.bash
 
 # Vars config for Varinka Rice
 # Bspwm border		# Normal border color	# Focused border color
@@ -161,14 +161,20 @@ set_picom_config() {
 		-e "s/corner-radius = .*/corner-radius = ${P_CORNER_R}/"
 
 	sed -i "$picom_rules_file" \
-		-e "95s/	opacity = .*/	opacity = 1;/"
+		-e "101s/	opacity = .*/	opacity = 1;/"
 
 	if [[ "$ANIMATIONS" = "true" ]]; then
 		sed -i "$picom_rules_file" \
 			-e '/picom-animations/c\@include "picom-animations.conf"'
+
+		sed -i "$picom_conf_file" \
+			-e "s/no-fading-openclose = .*/no-fading-openclose = true/"
 	else
 		sed -i "$picom_rules_file" \
 			-e '/picom-animations/c\#@include "picom-animations.conf"'
+
+		sed -i "$picom_conf_file" \
+			-e "s/no-fading-openclose = .*/no-fading-openclose = false/"
 	fi
 }
 
@@ -246,15 +252,6 @@ set_launchers() {
     img-background: url("~/.config/bspwm/rices/${RICE}/rofi.webp", width);
 }
 EOF
-
-	# Screenlock colors
-	sed -i "$HOME"/.config/bspwm/src/ScreenLocker \
-		-e "s/bg=.*/bg=${bg:1}/" \
-		-e "s/fg=.*/fg=${fg:1}/" \
-		-e "s/ring=.*/ring=${blackb:1}/" \
-		-e "s/wrong=.*/wrong=${red:1}/" \
-		-e "s/date=.*/date=${fg:1}/" \
-		-e "s/verify=.*/verify=${green:1}/"
 }
 
 set_appearance() {
@@ -291,6 +288,9 @@ set_geany(){
 
 # Launch theme
 launch_theme() {
+
+	# Set random wallpaper for actual rice
+	feh -z --no-fehbg --bg-fill "${HOME}"/.config/bspwm/rices/"${RICE}"/walls
 
 	# Launch dunst notification daemon
 	dunst -config "${HOME}"/.config/bspwm/src/config/dunstrc &
