@@ -2,7 +2,7 @@
 
 ## 👻 Welcome
 
-Welcome to my dotfiles. I’m gh0stzk from Mexico.
+Welcome to my dotfiles.
 
 These dotfiles are designed with the goal of providing a bspwm environment that is lightweight, efficient, and functional, tailored for any use—whether it’s gaming, web browsing, or a productive work setting.
 
