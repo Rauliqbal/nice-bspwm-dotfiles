@@ -1,5 +1,4 @@
 # A complete BSPWM Window Manager Environment
-<div align = center>
 
 ## 👻 Welcome
 
