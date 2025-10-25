@@ -22,7 +22,8 @@ super + {_,alt + }Return
 	OpenApps --{terminal,floating}
 
 # App launcher
-super + @space
+#super + @space
+super + a
 	OpenApps --menu
 
 # Theme Selector
@@ -32,7 +33,7 @@ alt + @space
 # ----- Your Apps ----- #
 
 # Apps (browser, editor, filemanager)
-super + {b,e,f}
+super + {b,c,e}
 	OpenApps --{browser,editor,filemanager}
 
 # Terminal apps (yazi, nvim, ncmpcpp)
@@ -44,7 +45,7 @@ super + {p,t,w}
 	OpenApps --{soundcontrol,telegram,whats}
 
 # Rice Editor App
-super + r
+super + i
     RiceEditor
 
 # ----- Rofi Applets ----- #
@@ -132,7 +133,7 @@ super + alt + r
 	bspc wm -r
 
 # Close/Kill node
-super + {_,shift + }x
+super + {_,shift + }q
 	bspc node -{c,k}
 
 # Reload sxhkd Keybinds
